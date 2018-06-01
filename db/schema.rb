@@ -22,10 +22,10 @@ ActiveRecord::Schema.define(version: 20180601153553) do
   end
 
   create_table "trip_trails", force: :cascade do |t|
-    t.bigint "trips_id"
-    t.bigint "trails_id"
-    t.index ["trails_id"], name: "index_trip_trails_on_trails_id"
-    t.index ["trips_id"], name: "index_trip_trails_on_trips_id"
+    t.bigint "trip_id"
+    t.bigint "trail_id"
+    t.index ["trail_id"], name: "index_trip_trails_on_trail_id"
+    t.index ["trip_id"], name: "index_trip_trails_on_trip_id"
   end
 
   create_table "trips", force: :cascade do |t|
@@ -34,6 +34,6 @@ ActiveRecord::Schema.define(version: 20180601153553) do
     t.datetime "end_date"
   end
 
-  add_foreign_key "trip_trails", "trails", column: "trails_id"
-  add_foreign_key "trip_trails", "trips", column: "trips_id"
+  add_foreign_key "trip_trails", "trails"
+  add_foreign_key "trip_trails", "trips"
 end

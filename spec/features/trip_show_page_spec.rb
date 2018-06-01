@@ -12,6 +12,10 @@ describe 'Trip Show page' do
     visit trip_path(trip)
 
     expect(current_path).to eq(trip_path(trip))
+
+    expect(page).to have_content(trip.name)
+    expect(page).to have_content(trip.start_date)
+    expect(page).to have_content(trip.end_date)
   end
 
 #   As a visitor,
@@ -21,14 +25,39 @@ describe 'Trip Show page' do
 
   it 'displays trail attributes' do
     trip = Trip.create(name: 'something', start_date: 1.day.ago, end_date: Time.now.utc)
-    trail = Trail.create(name: 'name', length: 3, address: 'PO BOX 3')
 
-    TripTrail.create(trip: trip, trail: trail)
+    trail_1 = Trail.create(name: 'name', length: 3, address: 'PO BOX 3')
+    trail_2 = Trail.create(name: 'another name', length: 2, address: 'PO BOX 1')
+    trail_3 = Trail.create(name: 'new name', length: 4, address: 'PO BOX 4')
+    TripTrail.create(trip: trip, trail: trail_1)
+    TripTrail.create(trip: trip, trail: trail_2)
+    TripTrail.create(trip: trip, trail: trail_3)
 
-    visit trip_path(trip)
+    visit trips_path
 
-    expect(page).to have_content(trail.name)
-    expect(page).to have_content(trail.length)
-    expect(page).to have_content(trail.address)
+    click_on "#{trip.name}"
+
+    expect(current_path).to eq(trip_path(trip))
+
+    expect(page).to have_content(trip.name)
+    expect(page).to have_content(trip.start_date)
+    expect(page).to have_content(trip.end_date)
+
+    expect(page).to have_content(trail_1.name)
+    expect(page).to have_content(trail_2.name)
+    expect(page).to have_content(trail_3.name)
+
+    expect(page).to have_content(trail_1.length)
+    expect(page).to have_content(trail_2.length)
+    expect(page).to have_content(trail_3.length)
+
+    expect(page).to have_content(trail_1.address)
+    expect(page).to have_content(trail_2.address)
+    expect(page).to have_content(trail_3.address)
+
+    expect(trip.trails_length).to eq(9)
+    expect(trip.trails_average).to eq(3)
+    expect(trip.longest_distance).to eq(4)
+    expect(trip.shortest_distance).to eq(2)
   end
 end
